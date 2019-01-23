@@ -23,6 +23,16 @@ router.route('/signin').post(
   UsersController.signIn
 )
 
+router.route('/oauth/google').post(
+  passport.authenticate('googleToken', { session: false }),
+  UsersController.googleOAuth
+)
+
+router.route('/oauth/facebook').post(
+  passport.authenticate('facebookToken', { session: false }),
+  UsersController.facebookOAuth
+)
+
 router.route('/secret').get(
   passport.authenticate('jwt', { session: false }),
   UsersController.secret

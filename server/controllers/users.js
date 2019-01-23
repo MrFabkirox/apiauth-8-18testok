@@ -21,7 +21,7 @@ module.exports = {
       const { email, password } = req.value.body
 
       // check if user already in db
-      const foundUser = await User.findOne({ email })
+      const foundUser = await User.findOne({ "local.email": email })
       if (foundUser) {
         return res.status(403).json({
           error: 'Email already in db',
@@ -29,7 +29,13 @@ module.exports = {
         })
       }
 
-      const newUser = new User({ email, password })
+      const newUser = new User({
+        method: 'local',
+        local: {
+          email: email,
+          password: password
+        }
+      })
       await newUser.save()
 
       const token = signToken(newUser)
@@ -43,6 +49,7 @@ module.exports = {
       })
 
     } catch(error) {
+      console.log('error in controller signup', error)
       next(error)
     }
   },
@@ -60,9 +67,48 @@ module.exports = {
       })
 
     } catch(error) {
+      console.log('error in controller signin', error)
       next(error)
     }
   },
+  
+
+  googleOAuth: async(req, res, next) => {
+    try {
+
+      // req.user available with passeport local strategy
+      const token = signToken(req.user)
+      
+//       console.log('users signin req.user')
+      res.status(200).json({
+        message: 'apiauth8 signin',
+        token: token
+      })
+
+    } catch(error) {
+      console.log('error in controller ggloauth', error)
+      next(error)
+    }
+  },
+
+  facebookOAuth: async(req, res, next) => {
+    try {
+
+      // req.user available with passeport local strategy
+      const token = signToken(req.user)
+      
+      console.log('\n-----users signin req.user---\n', req.user)
+      res.status(200).json({
+        message: 'apiauth8 signin',
+        token: token
+      })
+
+    } catch(error) {
+      console.log('error in controller fbloauth', error)
+      next(error)
+    }
+  },
+
 
   secret: async(req, res, next) => {
     try {
