@@ -2,6 +2,7 @@ const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 if (process.env.NODE_ENV === 'test') {
   mongoose.connect('mongodb://localhost/apiauth', {
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 const app = express()
+app.use(cors())
 
 // Middlewares
 // app.use(morgan('dev'))
